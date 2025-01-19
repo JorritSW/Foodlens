@@ -1,0 +1,8 @@
+Flask
+Pillow
+easyocr
+requests
+numpy
+opencv-python
+pyzbar
+translate
