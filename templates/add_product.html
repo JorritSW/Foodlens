@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Toevoegen</title>
+    <style>
+        /* ... styling ... */
+    </style>
+</head>
+<body>
+    <h1>Product Toevoegen</h1>
+    <form action="/add_product" method="post">
+        <input type="text" name="barcode" placeholder="Barcode" required>
+        <input type="text" name="name" placeholder="Productnaam" required>
+        <input type="text" name="brand" placeholder="Merk">
+        <textarea name="ingredients" placeholder="Ingrediënten"></textarea>
+        <input type="number" name="energy_kcal" placeholder="Kcal per 100g">
+        <input type="number" step="0.1" name="fat_100g" placeholder="Vet per 100g">
+        <!-- ... meer velden ... -->
+        <button type="submit">Toevoegen</button>
+    </form>
+</body>
+</html> 

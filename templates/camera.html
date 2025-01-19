@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera</title>
+    <style>
+        .camera-container {
+            text-align: center;
+            padding: 20px;
+        }
+        #snap {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #video {
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="camera-container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <br>
+        <button id="snap">Take Photo</button>
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const constraints = { video: true };
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert("Could not access camera. Please make sure you've granted camera permissions.");
+            }
+        }
+
+        snap.addEventListener('click', function() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 640, 480);
+            
+            const imageData = canvas.toDataURL('image/jpeg');
+            
+            fetch('/upload-photo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'imageData=' + encodeURIComponent(imageData)
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.body.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading photo. Please try again.');
+            });
+        });
+
+        startCamera();
+    </script>
+</body>
+</html>
