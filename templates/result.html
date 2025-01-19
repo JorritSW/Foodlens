@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Informatie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #28a745;
+        }
+
+        .product-info {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info h2 {
+            margin-top: 0;
+            color: #28a745;
+        }
+
+        .product-info ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .product-info ul li {
+            margin: 5px 0;
+        }
+
+        .ingredient-info {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 5px solid #28a745;
+        }
+
+        .ingredient-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .ingredient-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .score-a { background: #1a9850; }
+        .score-b { background: #91cf60; }
+        .score-c { background: #d9ef8b; color: #333; }
+        .score-d { background: #fee08b; color: #333; }
+        .score-e { background: #d73027; }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #28a745;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Informatie</h1>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if product %}
+        <div class="product-info">
+            <h2>{{ product.naam }}</h2>
+            <p><strong>Merk:</strong> {{ product.merk }}</p>
+
+            <h3>Voedingswaarden per 100g:</h3>
+            <ul>
+                <li><strong>Energie:</strong> {{ product.voedingswaarden.energie if product.voedingswaarden else 'N/A' }} kcal</li>
+                <li><strong>Vetten:</strong> {{ product.voedingswaarden.vetten if product.voedingswaarden else 'N/A' }}g</li>
+                <li><strong>Verzadigd vet:</strong> {{ product.voedingswaarden.verzadigd_vet if product.voedingswaarden else 'N/A' }}g</li>
+                <li><strong>Koolhydraten:</strong> {{ product.voedingswaarden.koolhydraten if product.voedingswaarden else 'N/A' }}g</li>
+                <li><strong>Suikers:</strong> {{ product.voedingswaarden.suikers if product.voedingswaarden else 'N/A' }}g</li>
+                <li><strong>Eiwitten:</strong> {{ product.voedingswaarden.eiwitten if product.voedingswaarden else 'N/A' }}g</li>
+                <li><strong>Zout:</strong> {{ product.voedingswaarden.zout if product.voedingswaarden else 'N/A' }}g</li>
+            </ul>
+
+            <h3>Scores:</h3>
+            <p><strong>Calorie Score:</strong>
+                <span class="score score-{{ product.calorie_score[0] if product.calorie_score else 'c' }}">
+                    {{ product.calorie_score if product.calorie_score else 'N/A' }}
+                </span>
+            </p>
+            <p><strong>Nutri-Score:</strong>
+                <span class="score score-{{ product.nutri_score if product.nutri_score else 'c' }}">
+                    {{ product.nutri_score if product.nutri_score else 'N/A' }}
+                </span>
+            </p>
+
+            <h3>Ingrediënten en hun functies:</h3>
+            {% if product.ingredienten %}
+                {% for ingredient in product.ingredienten %}
+                    <div class="ingredient-info">
+                        <div class="ingredient-name">{{ ingredient.naam }}</div>
+                        <div class="ingredient-description">{{ ingredient.info }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Geen ingrediënten informatie beschikbaar.</p>
+            {% endif %}
+
+            <h3>Allergenen:</h3>
+            <ul>
+                {% for allergeen in product.allergenen %}
+                    <li>{{ allergeen }}</li>
+                {% else %}
+                    <li>Geen allergenen informatie beschikbaar.</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Dieet Informatie:</h3>
+            <ul>
+                <li><strong>Vegetarisch:</strong> {{ 'Ja' if product.vegetarisch else 'Nee' }}</li>
+                <li><strong>Veganistisch:</strong> {{ 'Ja' if product.veganistisch else 'Nee' }}</li>
+                <li><strong>Glutenvrij:</strong> {{ 'Ja' if product.glutenvrij else 'Nee' }}</li>
+            </ul>
+        </div>
+    {% endif %}
+
+    <a href="/">Terug naar home</a>
+</body>
+</html>
